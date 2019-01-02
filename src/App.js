@@ -13,9 +13,11 @@ class App extends Component {
         this.state = {
             quoteObj: { isLoading: true },
             quotesArray: [],
-            isPresent: false
+            isPresent: false,
+            randomLocalQuote: ''
         }
         this.getRandomQuote = this.getRandomQuote.bind(this)
+        this.getRandomQuoteLocal = this.getRandomQuoteLocal.bind(this)
         this.saveToLocal = this.saveToLocal.bind(this)
     }
 
@@ -43,6 +45,16 @@ class App extends Component {
             }, () => this.checkAlreadySaved())
 
         })
+    }
+
+    getRandomQuoteLocal() {
+        let arrayLength = this.state.quotesArray.length
+        if (arrayLength > 0) {
+            let randomNumber = Math.floor(Math.random() * arrayLength)
+            this.setState(prevState => ({
+                randomLocalQuote: prevState.quotesArray[randomNumber]
+            }))
+        }
     }
 
     stringifyAndSave() {
@@ -92,8 +104,11 @@ class App extends Component {
                     </div >
 
                     <Route path='/' render={() => <RandomQuote quoteObj={this.state.quoteObj} saveToLocal={this.saveToLocal} isPresent={this.state.isPresent} />} exact />
-                    <Route path='/rndQuoteLocal' component={RandomQuoteLocal} />
+
+                    <Route path='/rndQuoteLocal' render={() => <RandomQuoteLocal getRandomQuoteLocal={this.getRandomQuoteLocal} randomLocalQuote={this.state.randomLocalQuote} />} />
+
                     <Route path='/addQuote' component={AddQuote} />
+
                     <Route path='/listQuotes' component={ListQuotes} />
                 </div>
             </BrowserRouter >
