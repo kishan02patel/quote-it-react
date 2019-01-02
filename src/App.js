@@ -118,7 +118,7 @@ class App extends Component {
 
                     <Route path='/addQuote' render={() => <AddQuote addNewQuote={this.addNewQuote} />} />
 
-                    <Route path='/listQuotes' component={ListQuotes} />
+                    <Route path='/listQuotes' render={() => <ListQuotes quotesArray={this.state.quotesArray} />} />
                 </div>
             </BrowserRouter >
         );
