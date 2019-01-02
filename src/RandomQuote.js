@@ -9,10 +9,10 @@ class RandomQuote extends React.Component {
 			<div>
 				<DisplayQuote quoteObj={this.props.quoteObj} />
 				<div class='save-btn'>
-					<button onClick={this.props.saveToLocal}><i class='material-icons'>bookmark</i>Save Quote</button>
+					<button onClick={this.props.saveToLocal} disabled={this.props.isPresent ? 'disabled' : ''} ><i class='material-icons'>bookmark</i>Save Quote</button>
 				</div>
 				<br />
-				<button onClick={this.props.quoteObj.getRandomQuote}>Get another quote</button>
+				<button onClick={this.props.quoteObj.getRandomQuote} >Get another quote</button>
 			</div>
 		)
 	}

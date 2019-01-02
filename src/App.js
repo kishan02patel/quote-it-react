@@ -12,7 +12,8 @@ class App extends Component {
         super()
         this.state = {
             quoteObj: { isLoading: true },
-            quotesArray: []
+            quotesArray: [],
+            isPresent: false
         }
         this.getRandomQuote = this.getRandomQuote.bind(this)
         this.saveToLocal = this.saveToLocal.bind(this)
@@ -35,10 +36,12 @@ class App extends Component {
                 quoteObj: {
                     quote: response.data.quoteText,
                     author: response.data.quoteAuthor,
+                    quoteLink: response.data.quoteLink,
                     isLoading: false,
                     getRandomQuote: this.getRandomQuote
                 }
-            })
+            }, () => this.checkAlreadySaved())
+
         })
     }
 
@@ -47,16 +50,29 @@ class App extends Component {
     }
 
     saveToLocal() {
-        console.log("save to local called")
         if (!this.state.quoteObj.isLoading) {
             this.setState(prevState => ({
-                quotesArray: prevState.quotesArray.concat(prevState.quoteObj)
+                quotesArray: prevState.quotesArray.concat(prevState.quoteObj),
+                isPresent: true
             }), () => this.stringifyAndSave())
+        }
+
+    }
+
+    checkAlreadySaved() {
+        let found = this.state.quotesArray.find(quote => quote.quoteLink === this.state.quoteObj.quoteLink)
+        if (found) {
+            this.setState({
+                isPresent: true
+            })
         }
     }
 
     getRandomQuote() {
-        this.componentDidMount()
+        this.setState({
+            isPresent: false
+        }, () => this.componentDidMount())
+
     }
 
     render() {
@@ -75,7 +91,7 @@ class App extends Component {
                         <br /><br />
                     </div >
 
-                    <Route path='/' render={() => <RandomQuote quoteObj={this.state.quoteObj} saveToLocal={this.saveToLocal} />} exact />
+                    <Route path='/' render={() => <RandomQuote quoteObj={this.state.quoteObj} saveToLocal={this.saveToLocal} isPresent={this.state.isPresent} />} exact />
                     <Route path='/rndQuoteLocal' component={RandomQuoteLocal} />
                     <Route path='/addQuote' component={AddQuote} />
                     <Route path='/listQuotes' component={ListQuotes} />
