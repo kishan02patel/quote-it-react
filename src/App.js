@@ -19,6 +19,7 @@ class App extends Component {
         this.getRandomQuote = this.getRandomQuote.bind(this)
         this.getRandomQuoteLocal = this.getRandomQuoteLocal.bind(this)
         this.saveToLocal = this.saveToLocal.bind(this)
+        this.addNewQuote = this.addNewQuote.bind(this)
     }
 
     componentWillMount() {
@@ -34,6 +35,7 @@ class App extends Component {
         Axios.get('https://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json').then(response => {
             if (!response.data.quoteText)
                 this.componentDidMount()
+
             this.setState({
                 quoteObj: {
                     quote: response.data.quoteText,
@@ -43,7 +45,6 @@ class App extends Component {
                     getRandomQuote: this.getRandomQuote
                 }
             }, () => this.checkAlreadySaved())
-
         })
     }
 
@@ -84,7 +85,12 @@ class App extends Component {
         this.setState({
             isPresent: false
         }, () => this.componentDidMount())
+    }
 
+    addNewQuote(quoteObj) {
+        this.setState({
+            quoteObj: quoteObj
+        }, () => this.saveToLocal())
     }
 
     render() {
@@ -107,7 +113,7 @@ class App extends Component {
 
                     <Route path='/rndQuoteLocal' render={() => <RandomQuoteLocal getRandomQuoteLocal={this.getRandomQuoteLocal} randomLocalQuote={this.state.randomLocalQuote} />} />
 
-                    <Route path='/addQuote' component={AddQuote} />
+                    <Route path='/addQuote' render={() => <AddQuote addNewQuote={this.addNewQuote} />} />
 
                     <Route path='/listQuotes' component={ListQuotes} />
                 </div>
