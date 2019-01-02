@@ -1,10 +1,9 @@
 import React from 'react'
-import './DisplayQuote.css'
 
 class DisplayQuote extends React.Component {
 	render() {
 		return (
-			<div>
+			<div class="display-quote">
 				{this.props.quoteObj.quote}
 				<br />~
 				{this.props.quoteObj.author}

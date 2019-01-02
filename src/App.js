@@ -11,13 +11,26 @@ class App extends Component {
     constructor() {
         super()
         this.state = {
-            quoteObj: { isLoading: true }
+            quoteObj: { isLoading: true },
+            quotesArray: []
         }
         this.getRandomQuote = this.getRandomQuote.bind(this)
+        this.saveToLocal = this.saveToLocal.bind(this)
+    }
+
+    componentWillMount() {
+        let getQuotesString = localStorage.getItem('savedQuotes')
+        if (getQuotesString) {
+            this.setState({
+                quotesArray: JSON.parse(getQuotesString)
+            })
+        }
     }
 
     componentDidMount() {
         Axios.get('https://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json').then(response => {
+            if (!response.data.quoteText)
+                this.componentDidMount()
             this.setState({
                 quoteObj: {
                     quote: response.data.quoteText,
@@ -27,6 +40,19 @@ class App extends Component {
                 }
             })
         })
+    }
+
+    stringifyAndSave() {
+        localStorage.setItem('savedQuotes', JSON.stringify(this.state.quotesArray))
+    }
+
+    saveToLocal() {
+        console.log("save to local called")
+        if (!this.state.quoteObj.isLoading) {
+            this.setState(prevState => ({
+                quotesArray: prevState.quotesArray.concat(prevState.quoteObj)
+            }), () => this.stringifyAndSave())
+        }
     }
 
     getRandomQuote() {
@@ -46,9 +72,10 @@ class App extends Component {
 		                <span><Link to='/addQuote'>Add Quote</Link></span>
                         &emsp;| &emsp;
 		                <span><Link to='/listQuotes'>List all Quotes(Local)</Link></span>
+                        <br /><br />
                     </div >
 
-                    <Route path='/' render={() => <RandomQuote quoteObj={this.state.quoteObj} />} exact />
+                    <Route path='/' render={() => <RandomQuote quoteObj={this.state.quoteObj} saveToLocal={this.saveToLocal} />} exact />
                     <Route path='/rndQuoteLocal' component={RandomQuoteLocal} />
                     <Route path='/addQuote' component={AddQuote} />
                     <Route path='/listQuotes' component={ListQuotes} />
