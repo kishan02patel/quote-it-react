@@ -11,7 +11,8 @@ class App extends Component {
     constructor() {
         super()
         this.state = {
-            quoteObj: { isLoading: true },
+            quoteObj: {},
+            quoteAttributes: { isLoading: true },
             quotesArray: [],
             isPresent: false,
             randomLocalQuote: ''
@@ -40,7 +41,9 @@ class App extends Component {
                 quoteObj: {
                     quote: response.data.quoteText,
                     author: response.data.quoteAuthor,
-                    quoteLink: response.data.quoteLink,
+                    quoteLink: response.data.quoteLink
+                },
+                quoteAttributes: {
                     isLoading: false,
                     getRandomQuote: this.getRandomQuote
                 }
@@ -63,7 +66,7 @@ class App extends Component {
     }
 
     saveToLocal() {
-        if (!this.state.quoteObj.isLoading) {
+        if (!this.state.quoteAttributes.isLoading) {
             this.setState(prevState => ({
                 quotesArray: prevState.quotesArray.concat(prevState.quoteObj),
                 isPresent: true
@@ -109,7 +112,7 @@ class App extends Component {
                         <br /><br />
                     </div >
 
-                    <Route path='/' render={() => <RandomQuote quoteObj={this.state.quoteObj} saveToLocal={this.saveToLocal} isPresent={this.state.isPresent} />} exact />
+                    <Route path='/' render={() => <RandomQuote quoteObj={this.state.quoteObj} quoteAttributes={this.state.quoteAttributes} saveToLocal={this.saveToLocal} isPresent={this.state.isPresent} />} exact />
 
                     <Route path='/rndQuoteLocal' render={() => <RandomQuoteLocal getRandomQuoteLocal={this.getRandomQuoteLocal} randomLocalQuote={this.state.randomLocalQuote} />} />
 
