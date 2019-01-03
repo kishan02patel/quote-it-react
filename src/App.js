@@ -21,6 +21,7 @@ class App extends Component {
         this.getRandomQuoteLocal = this.getRandomQuoteLocal.bind(this)
         this.saveToLocal = this.saveToLocal.bind(this)
         this.addNewQuote = this.addNewQuote.bind(this)
+        this.deleteSavedQuote = this.deleteSavedQuote.bind(this)
     }
 
     componentWillMount() {
@@ -96,6 +97,13 @@ class App extends Component {
         }, () => this.saveToLocal())
     }
 
+    deleteSavedQuote(id) {
+        this.setState(prevState => ({
+            quoteAttributes: { isLoading: false },
+            quotesArray: prevState.quotesArray.filter(quote => quote.quoteLink !== id)
+        }), () => this.stringifyAndSave())
+    }
+
     render() {
         return (
             < BrowserRouter >
@@ -118,7 +126,7 @@ class App extends Component {
 
                     <Route path='/addQuote' render={() => <AddQuote addNewQuote={this.addNewQuote} />} />
 
-                    <Route path='/listQuotes' render={() => <ListQuotes quotesArray={this.state.quotesArray} />} />
+                    <Route path='/listQuotes' render={() => <ListQuotes quotesArray={this.state.quotesArray} deleteSavedQuote={this.deleteSavedQuote} />} />
                 </div>
             </BrowserRouter >
         );

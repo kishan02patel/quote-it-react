@@ -8,7 +8,6 @@ class DisplayQuote extends React.Component {
 				<br />~
 				{this.props.quoteObj.author}
 			</div>
-
 		)
 	}
 }

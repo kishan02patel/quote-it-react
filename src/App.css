@@ -7,13 +7,19 @@
 }
 
 .display-quote {
-	width:60%;
-	text-align: center;
-	margin: auto;
-	border-radius: 5px;
-	padding:20px;
-	background: lightgray;
+  width:60%;
+  text-align: center;
+  margin: auto;
+  border-radius: 5px;
+  padding:20px;
+  background: lightgray;
+  font-size: 1.2em
 }
+
+.edit-delete-bar {
+  text-align: right;
+}
+
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
