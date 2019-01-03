@@ -22,6 +22,7 @@ class App extends Component {
         this.saveToLocal = this.saveToLocal.bind(this)
         this.addNewQuote = this.addNewQuote.bind(this)
         this.deleteSavedQuote = this.deleteSavedQuote.bind(this)
+        this.saveEditedQuote = this.saveEditedQuote.bind(this)
     }
 
     componentWillMount() {
@@ -37,6 +38,10 @@ class App extends Component {
         Axios.get('https://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json').then(response => {
             if (!response.data.quoteText)
                 this.componentDidMount()
+
+            // If the quoteLink is empty then make sure to assign a random unique string because we are searching and identifying the object based on the quoteLink.
+            if (response.data.quoteLink === '')
+                response.data.quoteLink = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2)
 
             this.setState({
                 quoteObj: {
@@ -104,6 +109,14 @@ class App extends Component {
         }), () => this.stringifyAndSave())
     }
 
+    saveEditedQuote(quoteObj) {
+        let quoteToChange = this.state.quotesArray.find(quote => quote.quoteLink === quoteObj.quoteLink)
+        quoteToChange.quote = quoteObj.quote
+        quoteToChange.author = quoteObj.author
+        this.setState({})
+        this.stringifyAndSave()
+    }
+
     render() {
         return (
             < BrowserRouter >
@@ -126,7 +139,7 @@ class App extends Component {
 
                     <Route path='/addQuote' render={() => <AddQuote addNewQuote={this.addNewQuote} />} />
 
-                    <Route path='/listQuotes' render={() => <ListQuotes quotesArray={this.state.quotesArray} deleteSavedQuote={this.deleteSavedQuote} />} />
+                    <Route path='/listQuotes' render={() => <ListQuotes quotesArray={this.state.quotesArray} deleteSavedQuote={this.deleteSavedQuote} saveEditedQuote={this.saveEditedQuote} />} />
                 </div>
             </BrowserRouter >
         );

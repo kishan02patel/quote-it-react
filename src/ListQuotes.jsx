@@ -11,6 +11,7 @@ class ListQuotes extends React.Component {
 		this.handleDelete = this.handleDelete.bind(this)
 		this.handleEdit = this.handleEdit.bind(this)
 		this.handleCancel = this.handleCancel.bind(this)
+		this.handleSave = this.handleSave.bind(this)
 	}
 
 	handleDelete(event) {
@@ -32,6 +33,12 @@ class ListQuotes extends React.Component {
 		})
 	}
 
+	handleSave(quoteObj) {
+		this.props.saveEditedQuote(quoteObj)
+		//After editing the quote set editing to false.
+		this.handleCancel()
+	}
+
 	render() {
 		return (
 			<div>
@@ -40,7 +47,7 @@ class ListQuotes extends React.Component {
 						return (
 							<div key={quoteObj.quoteLink}>
 								{
-									this.state.isEditing && this.state.eventId === quoteObj.quoteLink ? <EditQuote quoteObj={quoteObj} handleCancel={this.handleCancel} /> :
+									this.state.isEditing && this.state.eventId === quoteObj.quoteLink ? <EditQuote quoteObj={quoteObj} handleCancel={this.handleCancel} handleSave={this.handleSave} /> :
 										<div class="display-quote">
 											<DisplayQuote quoteObj={quoteObj} />
 											<div class='edit-delete-bar'>
